@@ -76,7 +76,8 @@ body {
 .edit-button:hover {
   background-color: green;
   color: white;
-}.delete-button {
+}
+.delete-button {
   position: absolute;
   top: 130px;
   right: 25px;

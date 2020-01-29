@@ -8,7 +8,6 @@ export default class Movie extends React.Component {
     super(props);
     this.state = {
       movie: null
-
     };
   }
 
@@ -33,12 +32,13 @@ export default class Movie extends React.Component {
     const addToSavedList = this.props.addToSavedList;
     addToSavedList(this.state.movie);
   };
-  
+
   deleteMovie = id => {
-      axios.delete(`http://localhost:5000/api/movies/${id}`)
-        .then(res => {})
-        .catch(err => console.log(err))
-   }
+    axios
+      .delete(`http://localhost:5000/api/movies/${id}`)
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
+  };
 
   render() {
     // console.log('that thing you asked for ', this.props.match.params.id)
@@ -52,13 +52,16 @@ export default class Movie extends React.Component {
         <div className="save-button" onClick={this.saveMovie}>
           Save Movie
         </div>
-        <Link to={`/update-movie/${this.props.match.params.id}`}>
-          <div className="edit-button" >
-            Edit Movie
-          </div>
+        <Link to={`/movie/update-movie/${this.props.match.params.id}`}>
+          <div className="edit-button">Edit Movie</div>
         </Link>
         <Link to="/">
-          <div className="delete-button" onClick={this.deleteMovie(this.state.movie.id)}>
+          <div
+            className="delete-button"
+            onClick={() => {
+              this.deleteMovie(this.state.movie.id);
+            }}
+          >
             Delete Movie
           </div>
         </Link>

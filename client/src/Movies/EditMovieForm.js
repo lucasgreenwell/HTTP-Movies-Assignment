@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import {Link} from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 import MovieCard from "./MovieCard";
 
 function EditMovieForm(props) {
   const [movie, setMovie] = useState({
+    id: Date.now(),
     title: "",
     director: "",
     metascore: "",
     stars: []
   });
-  const [editedMovie, setEditedMovie] = useState({});
-  const [putThisMovie, setPutThisMovie] = useState({});
+
+  const [editedMovie, setEditedMovie] = useState({ ...movie });
+  // const [putThisMovie, setPutThisMovie] = useState({});
 
   //   console.log(props.match.params.id);
 
@@ -20,28 +22,39 @@ function EditMovieForm(props) {
     axios
       .get(`http://localhost:5000/api/movies/${props.match.params.id}`)
       .then(res => {
-        console.log(res)
+        // console.log(res)
         setMovie(res.data);
       })
       .catch(err => console.log(err.response));
   }, []);
 
-    // useEffect(() => {
-    //     //need to find 'put' endpoints
-    //     //this function is happening too early
-    //     console.log('i exist')
-    //     axios.put(`http://localhost:5000/api/movies/:${props.match.params.id}`, putThisMovie)
-    //         .then(res => {console.log(res)})
-    //         .catch(err => {console.log(err)})
-    // }, [putThisMovie])
+  // const editMovie = id => {
+
+  // };
+
+  // useEffect(() => {
+  //     //need to find 'put' endpoints
+  //     //this function is happening too early
+  //     console.log('i exist')
+  //     axios.put(`http://localhost:5000/api/movies/:${props.match.params.id}`, putThisMovie)
+  //         .then(res => {console.log(res)})
+  //         .catch(err => {console.log(err)})
+  // }, [putThisMovie])
 
   const handleSubmit = e => {
     e.preventDefault();
-    setPutThisMovie({ ...editedMovie });
-    setEditedMovie({})
+
+    axios
+      .put(
+        `http://localhost:5000/api/movies/${props.match.params.id}`,
+        editedMovie
+      )
+      .then(res => console.log(res))
+      .catch(err => console.log(err.response));
   };
 
   const handleChange = e => {
+    console.log(e.target.value);
     switch (e.target.id) {
       case "title":
         setEditedMovie({ ...editedMovie, title: e.target.value });
@@ -65,20 +78,38 @@ function EditMovieForm(props) {
   return (
     <div>
       <MovieCard movie={movie} />
-      <form onChange={handleChange}>
-        <label for="title">
+      <form>
+        <label htmlFor="title">
           Title
-          <input type="text" id="title" placeholder={movie.title} value={editedMovie.title} />
+          <input
+            type="text"
+            id="title"
+            placeholder={movie.title}
+            value={editedMovie.title}
+            onChange={handleChange}
+          />
         </label>
-        <label for="metascore">
+        <label htmlFor="metascore">
           Metascore
-          <input type="text" id="metascore" placeholder={movie.metascore} value={editedMovie.metascore} />
+          <input
+            type="text"
+            id="metascore"
+            placeholder={movie.metascore}
+            value={editedMovie.metascore}
+            onChange={handleChange}
+          />
         </label>
-        <label for="director">
+        <label htmlFor="director">
           Director
-          <input type="text" id="director" placeholder={movie.director} value={editedMovie.director}/>
+          <input
+            type="text"
+            id="director"
+            placeholder={movie.director}
+            value={editedMovie.director}
+            onChange={handleChange}
+          />
         </label>
-        <Link to='/movies'>
+        <Link to="/movies">
           <button onClick={handleSubmit}>Submit</button>
         </Link>
       </form>
